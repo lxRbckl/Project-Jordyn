@@ -1,0 +1,19 @@
+{
+   "aliases": [
+      "choose",
+      "Choose",
+      "CHOOSE",
+      "address",
+      "Address",
+      "ADDRESS",
+      "inbox",
+      "Inbox",
+      "INBOX",
+      "compose",
+      "Compose",
+      "COMPOSE"
+   ],
+   "mail": {
+      "test": {}
+   }
+}
