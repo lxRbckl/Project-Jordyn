@@ -1,2 +1,40 @@
 {
+   "lxRbckl": {
+      "address": [
+         "test",
+         "another"
+      ],
+      "mail": {
+         "2": [
+            "test",
+            "subject",
+            "this is a test",
+            true
+         ],
+         "3": [
+            "test",
+            "subject",
+            "this is a test",
+            true
+         ],
+         "4": [
+            "another",
+            "subject",
+            "this is a test",
+            true
+         ],
+         "5": [
+            "another",
+            "subject",
+            "this is a test",
+            true
+         ],
+         "6": [
+            "another",
+            "subject",
+            "this is a test",
+            true
+         ]
+      }
+   }
 }

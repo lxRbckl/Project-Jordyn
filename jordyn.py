@@ -14,7 +14,7 @@ from discord.ext import commands
 # global <
 path = path.realpath(__file__).split('/')
 directory = '/'.join(path[:(len(path) - 1)])
-token = ''
+token = 'OTUwNjk0MTQ3MTU5OTA0Mjc2.Yico6w.DvcDKDXV9f8zVLyBbOI6nCX2w20'
 jordyn = commands.Bot(
 
     command_prefix = '',
@@ -74,7 +74,7 @@ async def conchCommand(ctx, arg):
 
 
 @jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['address'])
-async def addressCommand(ctx, address = None):
+async def addressCommand(ctx, address: str = None):
     '''  '''
 
     # local <
@@ -165,7 +165,7 @@ async def addressCommand(ctx, address = None):
 
 
 @jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['inbox'])
-async def inboxCommand(ctx, parAddress = None):
+async def inboxCommand(ctx, parAddress: str = None):
     '''  '''
 
     # local <
@@ -268,6 +268,33 @@ async def inboxCommand(ctx, parAddress = None):
         await ctx.author.send(inbox, delete_after = 180)
 
         # >
+
+    # >
+
+
+@jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['read'])
+async def readCommand(ctx, mailId: str):
+    '''  '''
+
+    # local <
+    data = jsonLoad(file = '/data.json')
+    mail = data[str(ctx.author)[:-5]]['mail']
+
+    # >
+
+    # mark read <
+    # update data <
+    # generate message for user <
+    mail[mailId][3] = True
+    data[str(ctx.author)[:-5]]['mail'] = mail
+    message = (f'Subect: {mail[mailId][1]}\nMessage: {mail[mailId][2]}')
+
+    # >
+
+    # send message to user <
+    # update data <
+    await ctx.author.send(message, delete_after = 540)
+    jsonDump(file = '/data.json', data = data)
 
     # >
 
