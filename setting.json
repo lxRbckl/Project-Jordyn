@@ -20,6 +20,11 @@
          "Inbox",
          "INBOX"
       ],
+      "read" : [
+         "read",
+         "Read",
+         "READ"
+      ],
       "compose" : [
          "compose",
          "Compose",

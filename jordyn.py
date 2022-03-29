@@ -165,7 +165,7 @@ async def addressCommand(ctx, address = None):
 
 
 @jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['inbox'])
-async def inboxCommand(ctx, parAddress = None, parCondition = None):
+async def inboxCommand(ctx, parAddress = None):
     '''  '''
 
     # local <
@@ -177,7 +177,7 @@ async def inboxCommand(ctx, parAddress = None, parCondition = None):
     # >
 
     # build summary <
-    for address, message, condition in mail:
+    for address, subject, message, condition in mail:
 
         # if (new address) then assign structure <
         if (address not in summary.keys()):
@@ -200,10 +200,8 @@ async def inboxCommand(ctx, parAddress = None, parCondition = None):
 
     # >
 
-    print(summary) # remove
-
     # if (no parameter) then summary <
-    if ((parAddress is None) and (parCondition is None)):
+    if (parAddress is None):
 
         # declare message <
         # iterate (address, count) in summary <
@@ -234,14 +232,35 @@ async def inboxCommand(ctx, parAddress = None, parCondition = None):
     # >
 
     # elif (address parameter only) then address summary <
-    elif ((parAddress is not None) and (parCondition is None)):
+    elif (parAddress is not None):
 
-        # add address <
+        # build read and unread <
+        inboxRead, inboxUnread = [], []
+        for mailId, mailData in data[str(ctx.author)[:-5]]['mail'].items():
+
+            # if (address match) then add <
+            if (mailData[0] == parAddress):
+
+                # if (read) then add to read list <
+                # else unread then add to unread list <
+                if (mailData[3] is True): inboxRead.append([mailId, mailData])
+                else: inboxUnread.append([mailId, mailData])
+
+                # >
+
+            # >
+
+        # >
+
         # add unread mail <
+        inbox = '\n{} **{} Unread**\n\n'.format(emojiUnread, summary[parAddress]['unread'])
+        for mailId, mailData in inboxUnread: inbox += (f'{mailId}.\t{mailData[1]}\n')
+
+        # >
+
         # add read mail <
-        inbox = '**{}**\t'.format(parAddress)
-        inbox += '{} **{}**\t'.format(emojiUnread, summary[address]['unread'])
-        inbox += '{} **{}**\n'.format(emojiRead, summary[address]['read'])
+        inbox += '\n{} **{} Read**\n\n'.format(emojiRead, summary[parAddress]['read'])
+        for mailId, mailData in inboxRead: inbox += (f'{mailId}.\t{mailData[1]}\n')
 
         # >
 
