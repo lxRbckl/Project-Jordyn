@@ -14,7 +14,7 @@ from discord.ext import commands
 # global <
 path = path.realpath(__file__).split('/')
 directory = '/'.join(path[:(len(path) - 1)])
-token = 'OTUwNjk0MTQ3MTU5OTA0Mjc2.Yico6w.DvcDKDXV9f8zVLyBbOI6nCX2w20'
+token = ''
 jordyn = commands.Bot(
 
     command_prefix = '',
