@@ -1,5 +1,5 @@
 ## [Project Jordyn](http://lxrbckl.com/Project-Jordyn)
-> Give an arbitrary amount of comma-separated input and receieve a randomly-chosen output.
+> Send and receieve messages through address points, play with a magic conch shell, and get have decisions made using a Discord bot.
 
 ### Installation
 ```
