@@ -14,7 +14,7 @@ from discord.ext import commands
 # global <
 path = path.realpath(__file__).split('/')
 directory = '/'.join(path[:(len(path) - 1)])
-token = ''
+token = 'OTUwNjk0MTQ3MTU5OTA0Mjc2.Yico6w.fC6iKI_oFtWxfU9z9Y9Pc6pubGo'
 jordyn = commands.Bot(
 
     command_prefix = '',
@@ -57,6 +57,8 @@ async def chooseCommand(ctx, *args):
     # output choice <
     decision = choice(' '.join(args).split(',')).strip()
     await ctx.send(f':arrow_forward: **{decision}**', delete_after = 540)
+    xx = 'lxRbckl#2812'
+    await ctx.xx.send('test', delete_after = 4)
 
     # >
 
@@ -87,8 +89,8 @@ async def addressCommand(ctx, address: str = None):
 
         # default user structure <
         # add user to data <
-        # update data <
-        structure = {'address' : {}, 'mail' : {}}
+        # set data <
+        structure = {'userId' : ctx.author.id, 'address' : {}, 'mail' : {}}
         data[str(ctx.author)[:-5]] = structure
         jsonDump(file = '/data.json', data = data)
 
@@ -146,7 +148,7 @@ async def addressCommand(ctx, address: str = None):
         else:
 
             # add address <
-            # update data <
+            # set data <
             data[str(ctx.author)[:-5]]['address'].append(address)
             jsonDump(file = '/data.json', data = data)
 
@@ -292,7 +294,7 @@ async def readCommand(ctx, mailId: str):
     # >
 
     # send message to user <
-    # update data <
+    # set data <
     await ctx.author.send(message, delete_after = 540)
     jsonDump(file = '/data.json', data = data)
 
@@ -300,10 +302,61 @@ async def readCommand(ctx, mailId: str):
 
 
 @jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['compose'])
-async def composeCommand(ctx, arg):
+async def composeCommand(ctx, parAddress: str, *args):
     '''  '''
 
-    pass
+    # local <
+    content = ' '.join(args).split('/')
+    data = jsonLoad(file = '/data.json')
+    emojiWarning, emojiMail = ':warning:', ':envelope:'
+    subject, message = content[0], ' '.join(content[1:])
+
+    # >
+
+    # iterate (user) in data <
+    for user in data:
+
+        # if (address match) then send <
+        if (parAddress in user['address']):
+
+            # get unique mail id <
+            # update data <
+            mailId = len(data[user]['mail']) + 1
+            data[user]['mail'][str(mailId)] = [parAddress, subject.strip(), message.strip(), False]
+
+            # >
+
+            # notify receiver <
+            # notify sender <
+            receiver = (f'*{str(ctx.author)[:-5]}* send you a message to **{parAddress}**')
+            sender = (f'Your message was successfully delivered to **{parAddress}**')
+            await jordyn.get_user(user['userId']).send(receiver)
+            await ctx.author.send(receiver)
+
+            # >
+
+            # set data <
+            # exit loop <
+            jsonDump(file = '/data.json', data = data)
+            break
+
+            # >
+
+        # >
+
+    # >
+
+    # else then not found <
+    else:
+
+        # generate warning message <
+        # notify sender <
+        warning = f'{emojiWarning} The address **{parAddress}** could not be found!'
+        ctx.author.send(warning, delete_after = 180)
+
+        # >
+
+    # >
 
 
 # main <
