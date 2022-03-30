@@ -7,7 +7,6 @@ from random import choice
 from json import load, dump
 from discord import Intents
 from discord.ext import commands
-from discord.ext.commands.errors import CommandInvokeError
 
 # >
 
