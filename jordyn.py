@@ -57,7 +57,6 @@ async def chooseCommand(ctx, *args):
     # output choice <
     decision = choice(' '.join(args).split(',')).strip()
     await ctx.send(f':arrow_forward: **{decision}**', delete_after = 540)
-    xx = 'lxRbckl#2812'
     await ctx.xx.send('test', delete_after = 4)
 
     # >
