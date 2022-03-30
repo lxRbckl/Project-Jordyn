@@ -7,6 +7,7 @@ from random import choice
 from json import load, dump
 from discord import Intents
 from discord.ext import commands
+from discord.ext.commands.errors import CommandInvokeError
 
 # >
 
@@ -75,7 +76,7 @@ async def conchCommand(ctx, arg):
 
 
 @jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['address'])
-async def addressCommand(ctx, address: str = None):
+async def addressCommand(ctx, parAddress: str = None):
     '''  '''
 
     # local <
@@ -89,7 +90,7 @@ async def addressCommand(ctx, address: str = None):
         # default user structure <
         # add user to data <
         # set data <
-        structure = {'userId' : ctx.author.id, 'address' : {}, 'mail' : {}}
+        structure = {'userId' : ctx.author.id, 'address' : [], 'mail' : {}}
         data[str(ctx.author)[:-5]] = structure
         jsonDump(file = '/data.json', data = data)
 
@@ -105,12 +106,12 @@ async def addressCommand(ctx, address: str = None):
     # >
 
     # if (no address) then get address <
-    if (address is None):
+    if (parAddress is None):
 
         # get author from data <
         # get address(es) from author <
-        address = data[str(ctx.author)[:-5]]['address']
-        output = '\n'.join(f'{c + 1}.\t*{a}*' for c, a in enumerate(address))
+        parAddress = data[str(ctx.author)[:-5]]['address']
+        output = '\n'.join(f'`{c + 1}.\t{a}`' for c, a in enumerate(parAddress))
 
         # >
 
@@ -128,12 +129,12 @@ async def addressCommand(ctx, address: str = None):
         for userId, userData in data.items():
 
             # if (address exists) then exit <
-            if (address in userData['address']):
+            if (parAddress in userData['address']):
 
                 # generate error message <
                 # notify user <
                 # exit <
-                error = (f'Address **{address}** already exists.')
+                error = (f'Address **{parAddress}** already exists.')
                 await ctx.author.send(error, delete_after = 60)
                 break
 
@@ -148,14 +149,14 @@ async def addressCommand(ctx, address: str = None):
 
             # add address <
             # set data <
-            data[str(ctx.author)[:-5]]['address'].append(address)
+            data[str(ctx.author)[:-5]]['address'].append(parAddress)
             jsonDump(file = '/data.json', data = data)
 
             # >
 
             # generate success message <
             # notify user <
-            success = (f'Address **{address}** was created.')
+            success = (f'Address **{parAddress}** was added.')
             await ctx.author.send(success, delete_after = 60)
 
             # >
@@ -173,7 +174,7 @@ async def inboxCommand(ctx, parAddress: str = None):
     summary = {}
     data = jsonLoad(file = '/data.json')
     mail = data[str(ctx.author)[:-5]]['mail'].values()
-    emojiUnread, emojiRead = ':mailbox:', ':mailbox_with_no_mail:'
+    emojiUnread, emojiRead = ':mailbox_with_mail:', ':mailbox_with_no_mail:'
 
     # >
 
@@ -196,6 +197,18 @@ async def inboxCommand(ctx, parAddress: str = None):
         # else then unread <
         if (condition is True): summary[address]['read'] += 1
         elif (condition is False): summary[address]['unread'] += 1
+
+        # >
+
+    # >
+
+    # if (summary is zero) then no mail <
+    if (len(summary) == 0):
+
+        # notify user <
+        # exit function <
+        await ctx.author.send('You have no mail.', delete_after = 180)
+        return
 
         # >
 
@@ -225,7 +238,7 @@ async def inboxCommand(ctx, parAddress: str = None):
 
         # >
 
-        # send message to user <
+        # send inbox summary to user <
         await ctx.author.send(allInbox, delete_after = 180)
 
         # >
@@ -254,18 +267,18 @@ async def inboxCommand(ctx, parAddress: str = None):
         # >
 
         # add unread mail <
-        inbox = '\n{} **{} Unread**\n\n'.format(emojiUnread, summary[parAddress]['unread'])
-        for mailId, mailData in inboxUnread: inbox += (f'{mailId}.\t{mailData[1]}\n')
+        inbox = '\n{} **{}**\n\n'.format(emojiUnread, summary[parAddress]['unread'])
+        for mailId, mailData in inboxUnread: inbox += (f'\t`{mailId}. {mailData[1]}`\n')
 
         # >
 
         # add read mail <
-        inbox += '\n{} **{} Read**\n\n'.format(emojiRead, summary[parAddress]['read'])
-        for mailId, mailData in inboxRead: inbox += (f'{mailId}.\t{mailData[1]}\n')
+        inbox += '\n{} **{}**\n\n'.format(emojiRead, summary[parAddress]['read'])
+        for mailId, mailData in inboxRead: inbox += (f'\t`{mailId}. {mailData[1]}`\n')
 
         # >
 
-        # send message to user <
+        # send inbox to user <
         await ctx.author.send(inbox, delete_after = 180)
 
         # >
@@ -288,7 +301,7 @@ async def readCommand(ctx, mailId: str):
     # generate message for user <
     mail[mailId][3] = True
     data[str(ctx.author)[:-5]]['mail'] = mail
-    message = (f'Subect: {mail[mailId][1]}\nMessage: {mail[mailId][2]}')
+    message = (f'**Subect:**\n`{mail[mailId][1]}`\n\n**Message:**\n`{mail[mailId][2]}`')
 
     # >
 
@@ -316,7 +329,7 @@ async def composeCommand(ctx, parAddress: str, *args):
     for user in data:
 
         # if (address match) then send <
-        if (parAddress in user['address']):
+        if (parAddress in data[user]['address']):
 
             # get unique mail id <
             # update data <
@@ -327,10 +340,10 @@ async def composeCommand(ctx, parAddress: str, *args):
 
             # notify receiver <
             # notify sender <
-            receiver = (f'*{str(ctx.author)[:-5]}* send you a message to **{parAddress}**')
-            sender = (f'Your message was successfully delivered to **{parAddress}**')
-            await jordyn.get_user(user['userId']).send(receiver)
-            await ctx.author.send(receiver)
+            receiver = (f'*{str(ctx.author)[:-5]}* sent you a message inbox **{parAddress}**')
+            sender = (f'Your message was successfully delivered to inbox **{parAddress}**')
+            await jordyn.get_user(data[user]['userId']).send(receiver)
+            await ctx.author.send(sender)
 
             # >
 
@@ -350,8 +363,8 @@ async def composeCommand(ctx, parAddress: str, *args):
 
         # generate warning message <
         # notify sender <
-        warning = f'{emojiWarning} The address **{parAddress}** could not be found!'
-        ctx.author.send(warning, delete_after = 180)
+        warning = (f'{emojiWarning} The address **{parAddress}** could not be found!')
+        await ctx.author.send(warning, delete_after = 180)
 
         # >
 
