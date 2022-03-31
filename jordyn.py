@@ -49,7 +49,7 @@ def jsonDump(file: str, data: dict):
     # >
 
 
-@jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['choose'])
+@jordyn.command(aliases = jsonLoad(file = '/setting.json')['alias']['choose'])
 async def chooseCommand(ctx, *args):
     '''  '''
 
@@ -62,7 +62,7 @@ async def chooseCommand(ctx, *args):
     # >
 
 
-@jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['conch'])
+@jordyn.command(aliases = jsonLoad(file = '/setting.json')['alias']['conch'])
 async def conchCommand(ctx, arg):
     '''  '''
 
@@ -74,7 +74,7 @@ async def conchCommand(ctx, arg):
     # >
 
 
-@jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['address'])
+@jordyn.command(aliases = jsonLoad(file = '/setting.json')['alias']['address'])
 async def addressCommand(ctx, parAddress: str = None):
     '''  '''
 
@@ -165,7 +165,7 @@ async def addressCommand(ctx, parAddress: str = None):
     # >
 
 
-@jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['inbox'])
+@jordyn.command(aliases = jsonLoad(file = '/setting.json')['alias']['inbox'])
 async def inboxCommand(ctx, parAddress: str = None):
     '''  '''
 
@@ -285,7 +285,7 @@ async def inboxCommand(ctx, parAddress: str = None):
     # >
 
 
-@jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['read'])
+@jordyn.command(aliases = jsonLoad(file = '/setting.json')['alias']['read'])
 async def readCommand(ctx, mailId: str):
     '''  '''
 
@@ -312,7 +312,7 @@ async def readCommand(ctx, mailId: str):
     # >
 
 
-@jordyn.command(aliases = jsonLoad(file = '/setting.json')['aliases']['compose'])
+@jordyn.command(aliases = jsonLoad(file = '/setting.json')['alias']['compose'])
 async def composeCommand(ctx, parAddress: str, *args):
     '''  '''
 
