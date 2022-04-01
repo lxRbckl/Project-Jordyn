@@ -14,13 +14,8 @@ from discord.ext import commands
 # global <
 path = path.realpath(__file__).split('/')
 directory = '/'.join(path[:(len(path) - 1)])
+jordyn = commands.Bot(command_prefix = '', intents = Intents.all())
 token = ''
-jordyn = commands.Bot(
-
-    command_prefix = '',
-    intents = Intents.all()
-
-)
 
 # >
 
